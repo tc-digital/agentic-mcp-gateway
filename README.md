@@ -121,6 +121,22 @@ python -m mcp_server_alpha.server
 python examples/research_example.py
 ```
 
+**GitHub Integration Demo:**
+```bash
+# Set GitHub token for higher rate limits (optional)
+export GITHUB_TOKEN='ghp_...'
+
+# Run the GitHub demo
+python examples/github_demo.py
+```
+
+This demo showcases:
+- Repository information retrieval
+- Repository search
+- Issue listing and analysis
+- Language statistics
+- Complete workflow automation
+
 ### Troubleshooting
 
 **Issue: "OPENAI_API_KEY not set"**

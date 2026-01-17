@@ -8,11 +8,12 @@
 ```json
 {
   "mcpServers": {
-    "mcp-server-alpha": {
+    "agentic-mcp-gateway": {
       "command": "python",
-      "args": ["-m", "mcp_server_alpha.server"],
+      "args": ["-m", "agentic_mcp_gateway.server"],
       "env": {
-        "OPENAI_API_KEY": "your-openai-api-key-here"
+        "OPENAI_API_KEY": "your-openai-api-key-here",
+        "GITHUB_TOKEN": "your-github-token-here"
       }
     }
   }
@@ -24,36 +25,33 @@
 3. **Use the reasoning_agent tool**:
 ```
 Use the reasoning_agent tool with goal: 
-"Research renewable energy trends and calculate the growth rate"
+"Analyze the openai/openai-python repository and provide insights"
 ```
 
 ## Example Goals
 
-### Research + Analysis
+### GitHub Analysis
 ```
-"Research quantum computing breakthroughs, analyze the key findings, 
-and summarize the top 3 most significant developments"
-```
-
-### Multi-Step Calculation
-```
-"Find information about electric vehicle sales in 2023, 
-calculate the year-over-year growth rate, 
-and analyze if the trend is accelerating"
+"Analyze the tc-digital/agentic-mcp-gateway repository, 
+review its structure, and suggest improvements"
 ```
 
-### Data Analysis
+### Repository Comparison
 ```
-"Analyze this dataset: [100, 150, 200, 250, 300, 350], 
-find the trend pattern, and calculate the projected value 
-for the next 3 periods"
+"Compare the stars and activity of the top 3 Python 
+machine learning repositories on GitHub"
 ```
 
-### Information Synthesis
+### Issue Analysis
 ```
-"Search for information about machine learning frameworks, 
-compare their features, and provide a summary of which 
-is best for beginners"
+"Get open issues for microsoft/vscode repository labeled 'bug',
+analyze common patterns, and summarize the findings"
+```
+
+### Code Review Assistance
+```
+"Review the languages used in facebook/react repository
+and provide insights on the codebase composition"
 ```
 
 ## Response Structure
@@ -101,6 +99,10 @@ is best for beginners"
 - **summarize_text** - Summarize long text content
 - **weather_forecast** - Get weather forecasts (US only)
 - **send_email** - Send emails via Power Automate
+- **github_get_repo_info** - Get GitHub repository information
+- **github_search_repositories** - Search GitHub repositories
+- **github_get_issues** - List repository issues
+- **github_get_languages** - Get repository language statistics
 
 ## Tips for Best Results
 
@@ -137,7 +139,7 @@ is best for beginners"
 ## Programmatic Usage
 
 ```python
-from mcp_server_alpha.agents import ReasoningOrchestrator
+from agentic_mcp_gateway.agents import ReasoningOrchestrator
 
 # Initialize
 orchestrator = ReasoningOrchestrator(
@@ -147,7 +149,7 @@ orchestrator = ReasoningOrchestrator(
 
 # Execute goal
 result = await orchestrator.execute(
-    goal="Research AI trends and calculate growth"
+    goal="Analyze the python/cpython repository and provide insights"
 )
 
 # Access results
