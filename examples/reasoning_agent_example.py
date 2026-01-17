@@ -3,7 +3,7 @@ import asyncio
 import json
 import os
 
-from mcp_server_alpha.agents import ReasoningOrchestrator
+from agentic_mcp_gateway.agents import ReasoningOrchestrator
 
 
 async def main():

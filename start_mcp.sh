@@ -44,4 +44,4 @@ fi
 cd "$SCRIPT_DIR"
 
 # Start the MCP server
-exec python -m mcp_server_alpha.server
+exec python -m agentic_mcp_gateway.server

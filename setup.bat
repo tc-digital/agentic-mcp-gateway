@@ -1,12 +1,12 @@
 @echo off
 REM
-REM Automated setup script for mcp-server-alpha (Windows)
+REM Automated setup script for agentic-mcp-gateway (Windows)
 REM This script creates a virtual environment, installs dependencies, and can start the server.
 REM
 
 setlocal enabledelayedexpansion
 
-echo === MCP Server Alpha - Automated Setup ===
+echo === Agentic MCP Gateway - Automated Setup ===
 echo.
 
 REM Get the directory where the script is located
@@ -125,7 +125,7 @@ echo   2. To run an example:
 echo      python examples\research_example.py
 echo.
 echo   3. To start the MCP server ^(for Claude Desktop integration^):
-echo      python -m mcp_server_alpha.server
+echo      python -m agentic_mcp_gateway.server
 echo.
 echo   4. To run tests:
 echo      pytest
@@ -138,7 +138,7 @@ if /i "!START_SERVER!"=="y" (
     echo Starting MCP server...
     echo   ^(Press Ctrl+C to stop^)
     echo.
-    python -m mcp_server_alpha.server
+    python -m agentic_mcp_gateway.server
 )
 
 endlocal

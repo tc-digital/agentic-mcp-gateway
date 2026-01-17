@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-from mcp_server_alpha.agents import ReasoningOrchestrator
+from agentic_mcp_gateway.agents import ReasoningOrchestrator
 
 
 def test_orchestrator_initialization_requires_key():

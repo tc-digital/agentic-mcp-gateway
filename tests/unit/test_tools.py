@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 import httpx
 import pytest
 
-from mcp_server_alpha.tools import (
+from agentic_mcp_gateway.tools import (
     analyze_data_tool,
     calculate_tool,
     send_email_tool,
@@ -224,7 +224,7 @@ async def test_send_email_success():
 
     # Mock httpx.AsyncClient
     with patch.dict(os.environ, {"POWER_AUTOMATE_WEBHOOK_URL": webhook_url}):
-        with patch("mcp_server_alpha.tools.send_email.httpx.AsyncClient") as mock_client_class:
+        with patch("agentic_mcp_gateway.tools.send_email.httpx.AsyncClient") as mock_client_class:
             # Setup mock response
             mock_response = AsyncMock()
             mock_response.status_code = 200
@@ -263,7 +263,7 @@ async def test_send_email_webhook_http_error():
     webhook_url = "https://example.com/webhook"
 
     with patch.dict(os.environ, {"POWER_AUTOMATE_WEBHOOK_URL": webhook_url}):
-        with patch("mcp_server_alpha.tools.send_email.httpx.AsyncClient") as mock_client_class:
+        with patch("agentic_mcp_gateway.tools.send_email.httpx.AsyncClient") as mock_client_class:
             # Setup mock response with error
             mock_response = AsyncMock()
             mock_response.status_code = 400
@@ -303,7 +303,7 @@ async def test_send_email_network_error():
     webhook_url = "https://example.com/webhook"
 
     with patch.dict(os.environ, {"POWER_AUTOMATE_WEBHOOK_URL": webhook_url}):
-        with patch("mcp_server_alpha.tools.send_email.httpx.AsyncClient") as mock_client_class:
+        with patch("agentic_mcp_gateway.tools.send_email.httpx.AsyncClient") as mock_client_class:
             # Setup mock to raise RequestError
             network_error = httpx.RequestError("Connection refused")
 

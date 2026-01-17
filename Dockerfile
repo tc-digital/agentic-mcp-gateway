@@ -1,4 +1,4 @@
-# Multi-stage build for mcp-server-alpha
+# Multi-stage build for agentic-mcp-gateway
 FROM python:3.11-slim AS builder
 
 # Set working directory
@@ -45,7 +45,7 @@ RUN useradd -m -u 1000 mcpuser && \
 USER mcpuser
 
 # Default command runs the MCP server
-CMD ["python", "-m", "mcp_server_alpha.server"]
+CMD ["python", "-m", "agentic_mcp_gateway.server"]
 
 # Health check (optional - only if your server supports HTTP health checks)
 # HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

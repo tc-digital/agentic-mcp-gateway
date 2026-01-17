@@ -16,7 +16,7 @@ sys.stderr.write("=== ALL IMPORTS SUCCESSFUL ===\n")
 sys.stderr.flush()
 
 # Create FastMCP server instance
-mcp = FastMCP("mcp-server-alpha-research")
+mcp = FastMCP("agentic-mcp-gateway-research")
 
 # Initialize reasoning orchestrator (lazy initialization to avoid
 # API key requirements at startup)
