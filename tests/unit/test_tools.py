@@ -324,7 +324,13 @@ async def test_send_email_network_error():
             assert "Network error" in result["error"]
 
 
-# GitHub tool tests
+# ============================================================================
+# GitHub Tool Tests
+# ============================================================================
+# Tests for GitHub integration tools including repository info, search,
+# issues listing, and language statistics.
+
+
 @pytest.mark.asyncio
 async def test_github_repo_info_success():
     """Test GitHub repo info with successful API response."""
