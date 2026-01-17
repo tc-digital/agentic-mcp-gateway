@@ -2,13 +2,13 @@
 
 ## Overview
 
-The Reasoning Agent Orchestrator is a meta-tool in the MCP server that uses LangGraph to autonomously plan and execute complex multi-step tasks by orchestrating existing MCP tools.
+The Reasoning Agent Orchestrator is a meta-tool in the Agentic MCP Gateway that uses LangGraph to autonomously plan and execute complex multi-step tasks by orchestrating existing MCP tools.
 
 ## Features
 
 - **Natural Language Goal Processing**: Accepts complex goals in plain English
 - **Autonomous Planning**: Uses LangGraph to decompose goals into actionable sub-tasks
-- **Multi-Tool Orchestration**: Coordinates multiple MCP tools (search, calculator, analyzer, summarizer, weather, email)
+- **Multi-Tool Orchestration**: Coordinates multiple MCP tools (search, calculator, analyzer, summarizer, weather, email, GitHub)
 - **Visible Reasoning Chain**: Shows step-by-step decision-making process for transparency
 - **Execution Tracking**: Provides detailed execution steps and tool usage summaries
 - **Branching Logic**: Makes decisions based on intermediate results
@@ -24,12 +24,14 @@ The reasoning agent operates as a meta-tool within the MCP framework:
                       │
                       ▼
 ┌─────────────────────────────────────────────────────┐
-│              MCP Server (server.py)                 │
+│       Agentic MCP Gateway (server.py)               │
 ├─────────────────────────────────────────────────────┤
 │  Tools:                                             │
 │  • web_search          • summarize_text             │
 │  • calculate           • weather_forecast           │
 │  • analyze_data        • send_email                 │
+│  • github_get_repo_info  • github_search_repos      │
+│  • github_get_issues     • github_get_languages     │
 │  • reasoning_agent  ◄──── Meta-tool                 │
 └─────────────────────┬───────────────────────────────┘
                       │
@@ -58,19 +60,19 @@ The reasoning agent operates as a meta-tool within the MCP framework:
 
 ### Via MCP Client (Claude Desktop)
 
-Once the MCP server is configured in Claude Desktop, you can use the reasoning agent directly:
+Once the gateway is configured in Claude Desktop, you can use the reasoning agent directly:
 
 ```
 Use the reasoning_agent tool to:
-"Research renewable energy trends, analyze the data, and calculate the growth rate over the last 5 years"
+"Analyze the tc-digital/agentic-mcp-gateway repository and suggest improvements"
 ```
 
 The agent will:
-1. Search for renewable energy trends
-2. Extract relevant data from search results
-3. Analyze the data to identify patterns
-4. Calculate the growth rate
-5. Provide a comprehensive answer
+1. Fetch repository information from GitHub
+2. Analyze the code structure and languages
+3. Review open issues and discussions
+4. Generate specific, actionable recommendations
+5. Provide a comprehensive improvement plan
 
 ### Configuration in Claude Desktop
 
@@ -79,23 +81,24 @@ Add to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "mcp-server-alpha": {
+    "agentic-mcp-gateway": {
       "command": "python",
-      "args": ["-m", "mcp_server_alpha.server"],
+      "args": ["-m", "agentic_mcp_gateway.server"],
       "env": {
-        "OPENAI_API_KEY": "your-openai-api-key-here"
+        "OPENAI_API_KEY": "your-openai-api-key-here",
+        "GITHUB_TOKEN": "your-github-token-here"
       }
     }
   }
 }
 ```
 
-**Important**: The reasoning agent requires an OpenAI API key to function.
+**Important**: The reasoning agent requires an OpenAI API key to function. GitHub token is optional but recommended for higher API rate limits.
 
 ### Programmatic Usage
 
 ```python
-from mcp_server_alpha.agents import ReasoningOrchestrator
+from agentic_mcp_gateway.agents import ReasoningOrchestrator
 
 # Initialize orchestrator
 orchestrator = ReasoningOrchestrator(

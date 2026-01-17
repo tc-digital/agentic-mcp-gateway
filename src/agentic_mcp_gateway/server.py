@@ -1,4 +1,4 @@
-"""Main MCP server implementation for Research Assistant."""
+"""Main MCP server implementation for Agentic MCP Gateway."""
 import sys
 from typing import Any
 
@@ -7,6 +7,12 @@ from fastmcp import FastMCP
 from .agents.reasoning_orchestrator import ReasoningOrchestrator
 from .tools.analyzer import analyze_data_tool
 from .tools.calculator import calculate_tool
+from .tools.github import (
+    github_list_issues,
+    github_repo_info,
+    github_repo_languages,
+    github_search_repos,
+)
 from .tools.search import web_search_tool
 from .tools.send_email import send_email_tool
 from .tools.summarizer import summarize_tool
@@ -16,7 +22,7 @@ sys.stderr.write("=== ALL IMPORTS SUCCESSFUL ===\n")
 sys.stderr.flush()
 
 # Create FastMCP server instance
-mcp = FastMCP("mcp-server-alpha-research")
+mcp = FastMCP("agentic-mcp-gateway-research")
 
 # Initialize reasoning orchestrator (lazy initialization to avoid
 # API key requirements at startup)
@@ -172,6 +178,78 @@ async def reasoning_agent(goal: str, context: dict[str, Any] | None = None) -> d
     }
 
     return formatted_result
+
+
+@mcp.tool()
+async def github_get_repo_info(owner: str, repo: str) -> dict[str, Any]:
+    """Get information about a GitHub repository.
+    
+    Args:
+        owner: Repository owner (username or organization)
+        repo: Repository name
+        
+    Returns:
+        Dictionary with repository information including stars, forks, description, etc.
+    """
+    result = await github_repo_info(owner=owner, repo=repo)
+    return result
+
+
+@mcp.tool()
+async def github_search_repositories(query: str, max_results: int = 5) -> dict[str, Any]:
+    """Search for GitHub repositories.
+    
+    Args:
+        query: Search query (e.g., "machine learning python")
+        max_results: Maximum number of results to return (default: 5)
+        
+    Returns:
+        Dictionary with list of matching repositories
+    """
+    result = await github_search_repos(query=query, max_results=max_results)
+    return result
+
+
+@mcp.tool()
+async def github_get_issues(
+    owner: str,
+    repo: str,
+    state: str = "open",
+    max_results: int = 10
+) -> dict[str, Any]:
+    """List issues for a GitHub repository.
+    
+    Args:
+        owner: Repository owner
+        repo: Repository name
+        state: Issue state - 'open', 'closed', or 'all' (default: 'open')
+        max_results: Maximum number of results to return (default: 10)
+        
+    Returns:
+        Dictionary with list of issues
+    """
+    result = await github_list_issues(
+        owner=owner,
+        repo=repo,
+        state=state,
+        max_results=max_results
+    )
+    return result
+
+
+@mcp.tool()
+async def github_get_languages(owner: str, repo: str) -> dict[str, Any]:
+    """Get programming languages used in a GitHub repository.
+    
+    Args:
+        owner: Repository owner
+        repo: Repository name
+        
+    Returns:
+        Dictionary with language statistics and percentages
+    """
+    result = await github_repo_languages(owner=owner, repo=repo)
+    return result
 
 
 def main() -> None:

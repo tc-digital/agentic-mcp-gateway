@@ -6,7 +6,7 @@ import httpx
 
 # Constants
 _ZIPCODE_PATTERN = r"^\d{5}$"
-_USER_AGENT = "(mcp-server-alpha, github.com/tc-digital/mcp-server-alpha)"
+_USER_AGENT = "(agentic-mcp-gateway, github.com/tc-digital/agentic-mcp-gateway)"
 _MAX_FORECAST_PERIODS = 7
 
 

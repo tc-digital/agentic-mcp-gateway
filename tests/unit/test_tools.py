@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 import httpx
 import pytest
 
-from mcp_server_alpha.tools import (
+from agentic_mcp_gateway.tools import (
     analyze_data_tool,
     calculate_tool,
     send_email_tool,
@@ -224,7 +224,7 @@ async def test_send_email_success():
 
     # Mock httpx.AsyncClient
     with patch.dict(os.environ, {"POWER_AUTOMATE_WEBHOOK_URL": webhook_url}):
-        with patch("mcp_server_alpha.tools.send_email.httpx.AsyncClient") as mock_client_class:
+        with patch("agentic_mcp_gateway.tools.send_email.httpx.AsyncClient") as mock_client_class:
             # Setup mock response
             mock_response = AsyncMock()
             mock_response.status_code = 200
@@ -263,7 +263,7 @@ async def test_send_email_webhook_http_error():
     webhook_url = "https://example.com/webhook"
 
     with patch.dict(os.environ, {"POWER_AUTOMATE_WEBHOOK_URL": webhook_url}):
-        with patch("mcp_server_alpha.tools.send_email.httpx.AsyncClient") as mock_client_class:
+        with patch("agentic_mcp_gateway.tools.send_email.httpx.AsyncClient") as mock_client_class:
             # Setup mock response with error
             mock_response = AsyncMock()
             mock_response.status_code = 400
@@ -303,7 +303,7 @@ async def test_send_email_network_error():
     webhook_url = "https://example.com/webhook"
 
     with patch.dict(os.environ, {"POWER_AUTOMATE_WEBHOOK_URL": webhook_url}):
-        with patch("mcp_server_alpha.tools.send_email.httpx.AsyncClient") as mock_client_class:
+        with patch("agentic_mcp_gateway.tools.send_email.httpx.AsyncClient") as mock_client_class:
             # Setup mock to raise RequestError
             network_error = httpx.RequestError("Connection refused")
 
@@ -322,3 +322,199 @@ async def test_send_email_network_error():
 
             assert result["success"] is False
             assert "Network error" in result["error"]
+
+
+# ============================================================================
+# GitHub Tool Tests
+# ============================================================================
+# Tests for GitHub integration tools including repository info, search,
+# issues listing, and language statistics.
+
+
+@pytest.mark.asyncio
+async def test_github_repo_info_success():
+    """Test GitHub repo info with successful API response."""
+    from agentic_mcp_gateway.tools.github import github_repo_info
+    
+    mock_response_data = {
+        "name": "test-repo",
+        "full_name": "test-owner/test-repo",
+        "description": "A test repository",
+        "owner": {"login": "test-owner"},
+        "stargazers_count": 100,
+        "forks_count": 20,
+        "open_issues_count": 5,
+        "language": "Python",
+        "default_branch": "main",
+        "created_at": "2023-01-01T00:00:00Z",
+        "updated_at": "2023-12-01T00:00:00Z",
+        "topics": ["test", "python"],
+        "license": {"name": "MIT"},
+        "homepage": "https://example.com",
+        "html_url": "https://github.com/test-owner/test-repo"
+    }
+    
+    with patch("agentic_mcp_gateway.tools.github.httpx.AsyncClient") as mock_client_class:
+        mock_response = AsyncMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = mock_response_data
+        
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_response)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock()
+        mock_client_class.return_value = mock_client
+        
+        result = await github_repo_info("test-owner", "test-repo")
+        
+        assert result["success"] is True
+        assert result["result"]["name"] == "test-repo"
+        assert result["result"]["stars"] == 100
+        assert result["result"]["language"] == "Python"
+
+
+@pytest.mark.asyncio
+async def test_github_repo_info_not_found():
+    """Test GitHub repo info with 404 response."""
+    from agentic_mcp_gateway.tools.github import github_repo_info
+    
+    with patch("agentic_mcp_gateway.tools.github.httpx.AsyncClient") as mock_client_class:
+        mock_response = AsyncMock()
+        mock_response.status_code = 404
+        
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_response)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock()
+        mock_client_class.return_value = mock_client
+        
+        result = await github_repo_info("nonexistent", "repo")
+        
+        assert result["success"] is False
+        assert "not found" in result["error"]
+
+
+@pytest.mark.asyncio
+async def test_github_search_repos_success():
+    """Test GitHub repository search."""
+    from agentic_mcp_gateway.tools.github import github_search_repos
+    
+    mock_response_data = {
+        "total_count": 100,
+        "items": [
+            {
+                "name": "repo1",
+                "full_name": "owner1/repo1",
+                "description": "Description 1",
+                "stargazers_count": 50,
+                "language": "Python",
+                "html_url": "https://github.com/owner1/repo1"
+            },
+            {
+                "name": "repo2",
+                "full_name": "owner2/repo2",
+                "description": "Description 2",
+                "stargazers_count": 30,
+                "language": "JavaScript",
+                "html_url": "https://github.com/owner2/repo2"
+            }
+        ]
+    }
+    
+    with patch("agentic_mcp_gateway.tools.github.httpx.AsyncClient") as mock_client_class:
+        mock_response = AsyncMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = mock_response_data
+        
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_response)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock()
+        mock_client_class.return_value = mock_client
+        
+        result = await github_search_repos("test query", max_results=2)
+        
+        assert result["success"] is True
+        assert len(result["result"]) == 2
+        assert result["result"][0]["name"] == "repo1"
+        assert result["details"]["total_count"] == 100
+
+
+@pytest.mark.asyncio
+async def test_github_list_issues_success():
+    """Test listing GitHub issues."""
+    from agentic_mcp_gateway.tools.github import github_list_issues
+    
+    mock_response_data = [
+        {
+            "number": 1,
+            "title": "Bug report",
+            "state": "open",
+            "user": {"login": "user1"},
+            "labels": [{"name": "bug"}],
+            "created_at": "2023-01-01T00:00:00Z",
+            "updated_at": "2023-01-02T00:00:00Z",
+            "comments": 5,
+            "html_url": "https://github.com/owner/repo/issues/1"
+        },
+        {
+            "number": 2,
+            "title": "Feature request",
+            "state": "open",
+            "user": {"login": "user2"},
+            "labels": [{"name": "enhancement"}],
+            "created_at": "2023-01-03T00:00:00Z",
+            "updated_at": "2023-01-04T00:00:00Z",
+            "comments": 2,
+            "html_url": "https://github.com/owner/repo/issues/2"
+        }
+    ]
+    
+    with patch("agentic_mcp_gateway.tools.github.httpx.AsyncClient") as mock_client_class:
+        mock_response = AsyncMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = mock_response_data
+        
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_response)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock()
+        mock_client_class.return_value = mock_client
+        
+        result = await github_list_issues("owner", "repo", state="open")
+        
+        assert result["success"] is True
+        assert len(result["result"]) == 2
+        assert result["result"][0]["title"] == "Bug report"
+        assert result["details"]["count"] == 2
+
+
+@pytest.mark.asyncio
+async def test_github_repo_languages_success():
+    """Test getting repository languages."""
+    from agentic_mcp_gateway.tools.github import github_repo_languages
+    
+    mock_response_data = {
+        "Python": 50000,
+        "JavaScript": 30000,
+        "HTML": 20000
+    }
+    
+    with patch("agentic_mcp_gateway.tools.github.httpx.AsyncClient") as mock_client_class:
+        mock_response = AsyncMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = mock_response_data
+        
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_response)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock()
+        mock_client_class.return_value = mock_client
+        
+        result = await github_repo_languages("owner", "repo")
+        
+        assert result["success"] is True
+        assert len(result["result"]) == 3
+        assert result["result"][0]["language"] == "Python"
+        assert result["result"][0]["percentage"] == 50.0
+        assert result["details"]["total_bytes"] == 100000

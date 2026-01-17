@@ -1,12 +1,12 @@
 #!/bin/bash
 #
-# Automated setup script for mcp-server-alpha (Linux/macOS)
+# Automated setup script for agentic-mcp-gateway (Linux/macOS)
 # This script creates a virtual environment, installs dependencies, and can start the server.
 #
 
 set -e  # Exit on error
 
-echo "=== MCP Server Alpha - Automated Setup ==="
+echo "=== Agentic MCP Gateway - Automated Setup ==="
 echo ""
 
 # Colors for output
@@ -107,7 +107,7 @@ echo "  2. To run an example:"
 echo "     python examples/research_example.py"
 echo ""
 echo "  3. To start the MCP server (for Claude Desktop integration):"
-echo "     python -m mcp_server_alpha.server"
+echo "     python -m agentic_mcp_gateway.server"
 echo ""
 echo "  4. To run tests:"
 echo "     pytest"
@@ -121,5 +121,5 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "🚀 Starting MCP server..."
     echo "   (Press Ctrl+C to stop)"
     echo ""
-    exec python -m mcp_server_alpha.server
+    exec python -m agentic_mcp_gateway.server
 fi

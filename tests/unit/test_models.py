@@ -1,5 +1,5 @@
 """Tests for research models."""
-from mcp_server_alpha.models import ReasoningType, ResearchQuery, ResearchQueryType, ThoughtChain
+from agentic_mcp_gateway.models import ReasoningType, ResearchQuery, ResearchQueryType, ThoughtChain
 
 
 def test_research_query_creation():

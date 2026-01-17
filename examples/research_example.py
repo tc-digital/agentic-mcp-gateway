@@ -2,7 +2,7 @@
 import asyncio
 import os
 
-from mcp_server_alpha.agents import ResearchAgent
+from agentic_mcp_gateway.agents import ResearchAgent
 
 
 async def main():

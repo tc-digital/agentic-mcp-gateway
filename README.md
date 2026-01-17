@@ -1,6 +1,6 @@
-# Research Assistant with LangGraph
+# Agentic MCP Gateway
 
-An intelligent, autonomous research assistant powered by LangGraph and OpenAI that demonstrates visible reasoning chains and multi-tool orchestration.
+A modular, agentic MCP gateway for AI-powered developer workflows. Features deep GitHub integration, pluggable tools, multi-LLM orchestration, and visible reasoning chains for complex task automation.
 
 ## 🚀 Quick Start
 
@@ -10,15 +10,15 @@ Get up and running in under 2 minutes!
 
 **Linux/macOS:**
 ```bash
-git clone https://github.com/tc-digital/mcp-server-alpha.git
-cd mcp-server-alpha
+git clone https://github.com/tc-digital/agentic-mcp-gateway.git
+cd agentic-mcp-gateway
 ./setup.sh
 ```
 
 **Windows:**
 ```cmd
-git clone https://github.com/tc-digital/mcp-server-alpha.git
-cd mcp-server-alpha
+git clone https://github.com/tc-digital/agentic-mcp-gateway.git
+cd agentic-mcp-gateway
 setup.bat
 ```
 
@@ -32,13 +32,13 @@ The scripts will:
 
 ```bash
 # Build the Docker image
-docker build -t mcp-server-alpha .
+docker build -t agentic-mcp-gateway .
 
 # Run with environment variables
 docker run -it --rm \
   -e OPENAI_API_KEY='your-api-key-here' \
   -e POWER_AUTOMATE_WEBHOOK_URL='your-webhook-url' \
-  mcp-server-alpha
+  agentic-mcp-gateway
 ```
 
 For Docker Compose, create a `docker-compose.yml`:
@@ -65,8 +65,8 @@ Then run: `docker-compose up`
 
 ```bash
 # Clone and navigate
-git clone https://github.com/tc-digital/mcp-server-alpha.git
-cd mcp-server-alpha
+git clone https://github.com/tc-digital/agentic-mcp-gateway.git
+cd agentic-mcp-gateway
 
 # Create virtual environment
 python -m venv venv
@@ -81,11 +81,14 @@ pip install -e ".[dev]"
 Set these environment variables before running:
 
 ```bash
-# Required for OpenAI-powered research
+# Required for AI-powered workflows
 export OPENAI_API_KEY='sk-...'
 
 # Optional for send_email tool
 export POWER_AUTOMATE_WEBHOOK_URL='https://prod-...'
+
+# Optional for GitHub integration
+export GITHUB_TOKEN='ghp_...'
 ```
 
 **Windows (cmd):**
@@ -117,6 +120,22 @@ python -m mcp_server_alpha.server
 ```bash
 python examples/research_example.py
 ```
+
+**GitHub Integration Demo:**
+```bash
+# Set GitHub token for higher rate limits (optional)
+export GITHUB_TOKEN='ghp_...'
+
+# Run the GitHub demo
+python examples/github_demo.py
+```
+
+This demo showcases:
+- Repository information retrieval
+- Repository search
+- Issue listing and analysis
+- Language statistics
+- Complete workflow automation
 
 ### Troubleshooting
 
@@ -168,112 +187,114 @@ For more details, see [FastMCP Documentation](https://gofastmcp.com).
 
 ## 🎯 What It Does
 
-This research assistant can:
-- **🔍 Research any topic** using web search and information gathering
-- **🧮 Perform calculations** for mathematical and financial queries
-- **📊 Analyze data** to find patterns and insights
-- **📝 Summarize content** to extract key information
-- **🌤️ Get weather forecasts** for any US location by zip code or coordinates
-- **📧 Send emails** via Power Automate flow webhooks
-- **🤖 Autonomous reasoning agent** for complex multi-step tasks (NEW!)
-- **💭 Show its reasoning** with visible thought chains
+The Agentic MCP Gateway provides:
+- **🔍 Web Search & Research** - Information gathering and analysis
+- **🧮 Calculations** - Mathematical and financial computations
+- **📊 Data Analysis** - Statistical analysis and pattern finding
+- **📝 Summarization** - Extract key information from content
+- **🌤️ Weather Forecasts** - Real-time weather data via weather.gov API
+- **📧 Email Integration** - Send emails via Power Automate webhooks
+- **🐙 GitHub Integration** - Repository analysis, PR management, code reviews (NEW!)
+- **🤖 Autonomous Reasoning** - Multi-step task orchestration with visible reasoning chains
+- **🔌 Pluggable Architecture** - Easy addition of new tools and integrations
+- **💭 Traceability** - Full visibility into agent decision-making process
 
-## 🆕 Reasoning Agent Meta-Tool
+## 🆕 Agentic Orchestration
 
-The **Reasoning Agent** is a meta-tool that orchestrates other MCP tools using LangGraph for autonomous planning and execution. Perfect for complex tasks requiring multiple steps and decision-making.
+The **Reasoning Agent** is a meta-tool that orchestrates other MCP tools using LangGraph for autonomous planning and execution. Perfect for complex, multi-step developer workflows.
 
-**Example**: *"Research renewable energy trends, analyze the data, and calculate the growth rate"*
+**Example**: *"Analyze this GitHub repository and suggest performance improvements"*
 
 The agent will:
-1. 🔍 Search for renewable energy information
-2. 📊 Analyze the data found
-3. 🧮 Calculate growth rates
-4. 💡 Synthesize results into a comprehensive answer
+1. 🔍 Fetch repository information and structure
+2. 📊 Analyze code patterns and dependencies
+3. 💡 Generate specific, actionable recommendations
+4. 📝 Provide implementation guidance
 
 **📖 [Full Reasoning Agent Documentation](REASONING_AGENT.md)**
 
 ## 🏗️ Architecture
 
 ```
-src/mcp_server_alpha/
-├── models/          # Research models (Query, Result, ThoughtChain, etc.)
-├── tools/           # Research tools (search, calculator, analyzer, summarizer, weather, send_email)
-├── agents/          # LangGraph agent with reasoning chains + Reasoning Orchestrator (NEW)
-├── orchestration/   # Workflow engine for complex tasks
+src/agentic_mcp_gateway/
+├── models/          # Data models (Query, Result, ThoughtChain, etc.)
+├── tools/           # Modular tools (search, calculator, analyzer, weather, email, github)
+├── agents/          # LangGraph-based reasoning agents and orchestrators
+├── orchestration/   # Workflow engine for complex task automation
 ├── adapters/        # Multi-channel adapters (chat, voice, API)
 └── server.py        # FastMCP server implementation
 ```
 
 ### Key Components
 
-#### 1. **Reasoning Agent Orchestrator** (`agents/reasoning_orchestrator.py`) - NEW!
+#### 1. **Reasoning Agent Orchestrator** (`agents/reasoning_orchestrator.py`)
 - Meta-tool that orchestrates other MCP tools using LangGraph
 - Autonomous goal decomposition and task planning
 - Multi-step execution with branching logic
 - Step-by-step progress tracking with visible reasoning
 
-#### 2. **Research Agent** (`agents/research_agent.py`)
-- LangGraph-based autonomous agent
+#### 2. **Agentic Tools** (`agents/research_agent.py`)
+- LangGraph-based autonomous agents
 - Uses OpenAI (gpt-4o-mini by default) for reasoning
 - Visible thought process and reasoning chains
-- Tool orchestration based on research needs
+- Dynamic tool orchestration based on task requirements
 
-#### 3. **Research Tools** (`tools/`)
-- **Web Search**: Find information on any topic (mock, ready for real API)
+#### 3. **Modular Tool System** (`tools/`)
+- **Web Search**: Find information on any topic (ready for real API integration)
 - **Calculator**: Perform mathematical calculations
 - **Data Analyzer**: Statistical analysis and pattern finding
 - **Summarizer**: Extract key information from text
-- **Weather Forecast**: Get real-time weather forecasts using weather.gov API
+- **Weather Forecast**: Real-time weather forecasts using weather.gov API
 - **Send Email**: Trigger Power Automate flow to send emails via webhook
+- **GitHub Integration**: Repository analysis, issue/PR management, code reviews (NEW!)
 
 #### 4. **Reasoning Chain** (`models/reasoning.py`)
 - Tracks agent's thought process
 - Shows observations, analysis, synthesis, and conclusions
-- Helps understand how the agent reaches answers
+- Helps understand how the agent reaches decisions
 
-#### 5. **Config-Driven System**
+#### 5. **Plugin Architecture**
 - Easy to add new tools and integrations
-- No code changes needed for new capabilities
-- Pluggable architecture
+- Config-driven tool registration
+- No core code changes needed for new capabilities
+- See [CONTRIBUTING.md](CONTRIBUTING.md) for details
 
-### Example Research Queries
+### Example Workflows
 
-The assistant can handle various types of research:
+The gateway supports various agentic workflows:
 
 ```python
-# Factual research
-"What are the key differences between machine learning and deep learning?"
+# Developer workflows
+"Analyze the tc-digital/agentic-mcp-gateway repository and suggest improvements"
+"Review PR #42 and provide feedback on code quality and security"
+"Search for React performance optimization techniques and create a summary"
 
-# Calculations
+# Data & calculations
 "Calculate compound interest on $10,000 at 5% for 3 years"
-
-# Data analysis
 "Analyze this dataset: [10, 15, 20, 25, 30] and show statistics"
 
-# Weather forecasts
+# Weather & communications
 "What's the weather forecast for zip code 10001?"
-"Get the hourly weather forecast for San Francisco (94102)"
+"Send an email to team@example.com with today's standup notes"
 
-# Send email via Power Automate
-"Send an email to john@example.com with subject 'Meeting Notes' and body 'Here are the notes from today's meeting...'"
-
-# Multi-step research with reasoning agent
-"Research renewable energy trends and calculate the growth rate"
+# Multi-step agentic tasks
+"Research best practices for Python async/await and create a guide"
+"Analyze repository issues labeled 'bug' and identify common patterns"
 ```
 
 For Claude Desktop users, see the [Quick Start](#-quick-start) section for setup instructions.
 
 ## 💡 Usage
 
-### Basic Research
+### Basic Workflow
 
 ```python
-from mcp_server_alpha.agents import ResearchAgent
+from agentic_mcp_gateway.agents import ResearchAgent
 
 # Initialize agent
 agent = ResearchAgent()
 
-# Research a topic
+# Execute a task
 result = await agent.research("What is quantum computing?")
 
 print(result["response"])  # Agent's answer
@@ -502,7 +523,7 @@ $env:POWER_AUTOMATE_WEBHOOK_URL="https://prod-..."
 
 **Docker:**
 ```bash
-docker run -e OPENAI_API_KEY='sk-...' -e POWER_AUTOMATE_WEBHOOK_URL='https://...' mcp-server-alpha
+docker run -e OPENAI_API_KEY='sk-...' -e POWER_AUTOMATE_WEBHOOK_URL='https://...' -e GITHUB_TOKEN='ghp_...' agentic-mcp-gateway
 ```
 
 **Claude Desktop Configuration:**
@@ -514,20 +535,21 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 ```json
 {
   "mcpServers": {
-    "mcp-server-alpha": {
-      "command": "/absolute/path/to/mcp-server-alpha/start_mcp.sh",
+    "agentic-mcp-gateway": {
+      "command": "/absolute/path/to/agentic-mcp-gateway/start_mcp.sh",
       "env": {
         "OPENAI_API_KEY": "sk-...",
-        "POWER_AUTOMATE_WEBHOOK_URL": "https://..."
+        "POWER_AUTOMATE_WEBHOOK_URL": "https://...",
+        "GITHUB_TOKEN": "ghp_..."
       }
     }
   }
 }
 ```
 
-Replace `/absolute/path/to/mcp-server-alpha/start_mcp.sh` with the actual path:
-- **Linux/macOS**: `/home/username/mcp-server-alpha/start_mcp.sh`
-- **Windows**: `C:/Users/username/mcp-server-alpha/start_mcp.sh` (use forward slashes)
+Replace `/absolute/path/to/agentic-mcp-gateway/start_mcp.sh` with the actual path:
+- **Linux/macOS**: `/home/username/agentic-mcp-gateway/start_mcp.sh`
+- **Windows**: `C:/Users/username/agentic-mcp-gateway/start_mcp.sh` (use forward slashes)
 
 The `start_mcp.sh` script automatically:
 - Detects its location
@@ -539,12 +561,13 @@ The `start_mcp.sh` script automatically:
 ```json
 {
   "mcpServers": {
-    "mcp-server-alpha": {
+    "agentic-mcp-gateway": {
       "command": "python",
-      "args": ["-m", "mcp_server_alpha.server"],
+      "args": ["-m", "agentic_mcp_gateway.server"],
       "env": {
         "OPENAI_API_KEY": "sk-...",
-        "POWER_AUTOMATE_WEBHOOK_URL": "https://..."
+        "POWER_AUTOMATE_WEBHOOK_URL": "https://...",
+        "GITHUB_TOKEN": "ghp_..."
       }
     }
   }
@@ -568,34 +591,63 @@ ResearchAgent(
 ## 🌟 Features
 
 ### Current
-- ✅ Autonomous research with reasoning chains
-- ✅ **Reasoning Agent meta-tool for complex multi-step task orchestration (NEW!)**
-- ✅ Multi-tool orchestration
-- ✅ Context-aware conversations
-- ✅ Visible thought process and step-by-step execution tracking
-- ✅ Extensible tool system
-- ✅ OpenAI integration
-- ✅ Real-time weather forecasts via weather.gov API
-- ✅ Email sending via Power Automate flow webhooks
+- ✅ **Agentic orchestration** with LangGraph for complex multi-step workflows
+- ✅ **GitHub integration** for repository analysis and code review
+- ✅ **Modular tool system** with plugin architecture
+- ✅ **Multi-LLM support** via OpenAI (GPT-4o, GPT-4o-mini)
+- ✅ **Reasoning visibility** with step-by-step execution tracking
+- ✅ **Web search** capabilities (ready for API integration)
+- ✅ **Data analysis** and statistical operations
+- ✅ **Weather forecasts** via weather.gov API
+- ✅ **Email integration** via Power Automate webhooks
+- ✅ **Context-aware** conversations with state management
 
-### Coming Soon
-- 🔄 Real web search integration (Google, Bing)
-- 📄 Document analysis (PDF, Word, markdown)
-- 💾 Memory/RAG for long-term knowledge
-- 🎨 Visualization generation
-- 🌊 Streaming progress updates for reasoning agent
-- ✅ User prompt/parameter collection for reasoning agent
-- 📊 Visual flowchart of reasoning agent execution
-- 🔗 More integrations (GitHub, databases, etc.)
-- 🌐 Web UI for interactive research
+### Roadmap
+- 🔄 Enhanced GitHub workflows (automated PR reviews, issue triage)
+- 📄 Document analysis (PDF, Word, markdown parsing)
+- 💾 Memory/RAG for long-term knowledge retention
+- 🎨 Code visualization and diagram generation
+- 🌊 Streaming progress updates
+- 🔗 Additional integrations (Jira, Slack, databases)
+- 🌐 Web UI for interactive workflows
+- 🧪 Advanced testing and validation tools
 
 ## 🤝 Contributing
 
+We welcome contributions! The modular architecture makes it easy to add new tools and features.
+
+### Quick Start for Contributors
+
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch (`git checkout -b feature/amazing-tool`)
 3. Add your tool or enhancement
-4. Write tests
+4. Write tests for your changes
 5. Submit a pull request
+
+### Adding a New Tool
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions on:
+- Tool architecture and patterns
+- Plugin registration
+- Testing requirements
+- Code style guidelines
+
+### Development Setup
+
+```bash
+# Clone and install
+git clone https://github.com/tc-digital/agentic-mcp-gateway.git
+cd agentic-mcp-gateway
+python -m venv venv
+source venv/bin/activate
+pip install -e ".[dev]"
+
+# Run tests
+pytest tests/
+
+# Run linter
+ruff check src/
+```
 
 ## 📄 License
 
